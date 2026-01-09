@@ -18,7 +18,7 @@ if (!fs.existsSync(readmePath)) die("README.md not found");
 
 const readme = fs.readFileSync(readmePath, "utf8");
 
-// CRLF-safe helpers
+// CRLF-safe newline pattern
 const NL = String.raw`\r?\n`;
 
 function getArchitectureSection(md) {
@@ -35,7 +35,7 @@ function getArchitectureSection(md) {
 function getFirstMermaidBlock(text) {
   // CRLF-safe fenced block capture
   const mermaidRe = new RegExp(
-    String.raw"```mermaid\\s*" + NL + String.raw"([\\s\\S]*?)" + NL + String.raw"```",
+    String.raw` ```mermaid\s*` + NL + String.raw`([\s\S]*?)` + NL + String.raw` ``` `.trim(),
     "m"
   );
   const m = text.match(mermaidRe);
@@ -92,17 +92,18 @@ const replacement =
 
 // Replace the first Mermaid fenced block inside the Architecture section (CRLF-safe)
 const mermaidBlockRe = new RegExp(
-  String.raw"```mermaid\\s*" + NL + String.raw"[\\s\\S]*?" + NL + String.raw"```",
+  String.raw` ```mermaid\s*` + NL + String.raw`[\s\S]*?` + NL + String.raw` ``` `.trim(),
   "m"
 );
 
-const alreadyRendered = arch.body.includes(imgUrl) && arch.body.includes("<details>") && arch.body.includes("Mermaid source");
-
-let rewritten = readme;
+const alreadyRendered =
+  arch.body.includes(imgUrl) &&
+  arch.body.includes("<details>") &&
+  arch.body.includes("Mermaid source");
 
 if (!alreadyRendered) {
   const newArchBody = arch.body.replace(mermaidBlockRe, replacement);
-  rewritten = readme.replace(arch.fullMatch, `${arch.header}${newArchBody}`);
+  const rewritten = readme.replace(arch.fullMatch, `${arch.header}${newArchBody}`);
 
   if (rewritten !== readme) {
     fs.writeFileSync(readmePath, rewritten, "utf8");
