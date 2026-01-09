@@ -24,9 +24,10 @@ if (!fs.existsSync(mmdFile)) {
   die("docs/architecture.mmd not found. Create it with your Mermaid diagram source.");
 }
 
-// Puppeteer sandbox workaround for GitHub runners
 const puppeteerConfig = path.join(repoRoot, "scripts", "puppeteer.json");
-if (!fs.existsSync(puppeteerConfig)) die("scripts/puppeteer.json not found");
+if (!fs.existsSync(puppeteerConfig)) {
+  die("scripts/puppeteer.json not found. Create it to disable Chromium sandbox in CI.");
+}
 
 run("mmdc", [
   "-i", mmdFile,
@@ -35,4 +36,4 @@ run("mmdc", [
   "--puppeteerConfigFile", puppeteerConfig
 ]);
 
-console.log("Rendered docs/architecture.svg (not committed; used for docs build).");
+console.log("Rendered docs/architecture.svg (generated during docs build; not committed).");
