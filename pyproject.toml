@@ -7,7 +7,7 @@ name = "geofabric"
 dynamic = ["version"]
 description = "Query geospatial sources, analyze at scale, and publish results with a consistent API."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Marcos Tulio Fermin Lopez" }]
 keywords = ["gis", "geospatial", "duckdb", "geopandas", "geoarrow", "geoparquet", "stac", "pmtiles"]
