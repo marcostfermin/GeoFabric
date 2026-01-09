@@ -53,7 +53,7 @@ if (!mermaidBody) {
   // fallback: still render something if README has mermaid elsewhere
   mermaidBody = findFirstMermaidAnywhere(readme);
   if (!mermaidBody) {
-    console.log('No Mermaid block found in README.md. Nothing to do.');
+    console.log("No Mermaid block found in README.md. Nothing to do.");
     process.exit(0);
   }
   console.log('No Mermaid block found after "## Architecture". Using first Mermaid block found in README.');
@@ -69,15 +69,18 @@ const svgFile = path.join(docsDir, "architecture.svg");
 
 fs.writeFileSync(mmdFile, mermaidBody + "\n", "utf8");
 
-// Render using mermaid-cli (mmdc)
-run("mmdc", ["-i", mmdFile, "-o", svgFile, "-b", "transparent"]);
+// Render using mermaid-cli (mmdc) with Puppeteer sandbox disabled
+const puppeteerConfig = path.join(repoRoot, "scripts", "puppeteer.json");
+run("mmdc", [
+  "-i", mmdFile,
+  "-o", svgFile,
+  "-b", "transparent",
+  "--puppeteerConfigFile", puppeteerConfig
+]);
 
 console.log("Rendered docs/architecture.svg");
 
-// (Optional) README rewrite to PyPI-friendly image
-// If you want the README auto-rewritten, keep this on.
-// If you don't want it to touch README at all, delete everything below this line.
-
+// Optional README rewrite to PyPI-friendly image
 const imgUrl = "https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/architecture.svg";
 
 const replacement =
@@ -106,7 +109,6 @@ function rewriteArchitectureSection(md) {
   const body = sm[2];
   const full = sm[0];
 
-  // idempotent: don't churn commits if already rendered
   const alreadyRendered =
     body.includes(imgUrl) &&
     body.includes("<details>") &&
@@ -114,8 +116,6 @@ function rewriteArchitectureSection(md) {
 
   if (alreadyRendered) return md;
 
-  // Replace the first mermaid fence inside the architecture section (if present),
-  // otherwise insert the rendered image + details at the top of the section.
   const hasMermaidInSection = MERMAID_BLOCK_RE.test(body);
 
   let newBody;
