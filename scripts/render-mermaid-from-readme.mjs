@@ -19,22 +19,18 @@ if (!fs.existsSync(readmePath)) die("README.md not found");
 const readme = fs.readFileSync(readmePath, "utf8");
 
 // Find the Mermaid block inside the "## Architecture" section.
-// This prevents accidentally replacing the wrong Mermaid block if you add more later.
 function extractArchitectureMermaid(md) {
-  // Capture text from "## Architecture" up to the next "## " heading (or end of file).
   const sectionRe = /(^##\s+Architecture\s*$)([\s\S]*?)(?=^\s*##\s+|\s*$)/m;
   const sectionMatch = md.match(sectionRe);
   if (!sectionMatch) return null;
 
   const sectionBody = sectionMatch[2];
 
-  // Find first ```mermaid block within that section
   const mermaidRe = /```mermaid\s*\n([\s\S]*?)\n```/m;
   const mermaidMatch = sectionBody.match(mermaidRe);
   if (!mermaidMatch) return null;
 
   return {
-    sectionStartIndex: sectionMatch.index,
     sectionHeader: sectionMatch[1],
     sectionBody,
     mermaidBody: mermaidMatch[1].trimEnd(),
@@ -61,10 +57,9 @@ run("mmdc", ["-i", mmdFile, "-o", svgFile, "-b", "transparent"]);
 
 console.log("Rendered docs/architecture.svg");
 
-// Use a raw GitHub URL so PyPI can render the image
+// Raw GitHub URL so PyPI can render the image
 const imgUrl = "https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/architecture.svg";
 
-// Build replacement content for the Mermaid block inside Architecture section
 const replacement =
   [
     "",
@@ -82,14 +77,12 @@ const replacement =
     ""
   ].join("\n");
 
-// Now rewrite only the Mermaid block inside the Architecture section.
-// We do this by rebuilding the Architecture section body with the replacement.
+// Rewrite only the Mermaid block inside the Architecture section
 const sectionRe = /(^##\s+Architecture\s*$)([\s\S]*?)(?=^\s*##\s+|\s*$)/m;
 const rewritten = readme.replace(sectionRe, (full, headerLine, body) => {
   const mermaidRe = /```mermaid\s*\n[\s\S]*?\n```/m;
 
-  // If the section already contains the same imgUrl and details block, do nothing (idempotent).
-  // This prevents churn commits.
+  // Idempotency: don't churn commits if already rendered
   const alreadyHasImg = body.includes(imgUrl);
   const alreadyHasDetails = body.includes("<details>") && body.includes("Mermaid source");
   if (alreadyHasImg && alreadyHasDetails) return full;
