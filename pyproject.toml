@@ -9,7 +9,7 @@ description = "Query geospatial sources, analyze at scale, and publish results w
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Marcos Fermin" }]
+authors = [{ name = "Marcos Tulio Fermin Lopez" }]
 keywords = ["gis", "geospatial", "duckdb", "geopandas", "geoarrow", "geoparquet", "stac", "pmtiles"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -47,7 +47,6 @@ dev = [
   "pytest>=8.0.0",
   "pytest-cov>=5.0.0",
   "mypy>=1.10.0",
-  "ruff>=0.5.0",
   "pre-commit>=3.7.0",
   "mkdocs>=1.6.0",
   "mkdocs-material>=9.5.0",
@@ -109,89 +108,3 @@ strict_equality = true
 pretty = true
 namespace_packages = true
 ignore_missing_imports = true
-
-[tool.ruff]
-target-version = "py310"
-line-length = 100
-src = ["src"]
-
-[tool.ruff.lint]
-select = [
-    "E",      # pycodestyle errors
-    "W",      # pycodestyle warnings
-    "F",      # Pyflakes
-    "I",      # isort
-    "B",      # flake8-bugbear
-    "C4",     # flake8-comprehensions
-    "UP",     # pyupgrade
-    "ARG",    # flake8-unused-arguments
-    "SIM",    # flake8-simplify
-    "TCH",    # flake8-type-checking
-    "PTH",    # flake8-use-pathlib
-    "RUF",    # Ruff-specific rules
-]
-ignore = [
-    "E501",   # line too long (handled by formatter)
-    "B008",   # function call in default argument (needed for typer)
-    "ARG001", # unused function argument (often needed for interface compliance)
-    "ARG002", # unused method argument (often needed for API compatibility)
-    "TC001",  # move import into TYPE_CHECKING block (causes runtime issues)
-    "TC002",  # move third-party import into TYPE_CHECKING block (causes runtime issues)
-    "TC003",  # move stdlib import into TYPE_CHECKING block (causes runtime issues)
-    "RUF005", # consider unpacking instead of concatenation (stylistic preference)
-]
-
-[tool.ruff.lint.isort]
-known-first-party = ["geofabric"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ARG001", "ARG002"]
-
-[tool.pylint.main]
-ignore-patterns = ["test_.*\\.py"]
-
-[tool.pylint."messages control"]
-disable = [
-    "C0114",  # missing-module-docstring
-    "C0115",  # missing-class-docstring
-    "C0116",  # missing-function-docstring
-    "C0301",  # line-too-long (handled by ruff)
-    "C0302",  # too-many-lines
-    "C0103",  # invalid-name (enum values, etc.)
-    "C0415",  # import-outside-toplevel (lazy imports are intentional)
-    "C1803",  # use-implicit-booleaness-not-comparison
-    "R0903",  # too-few-public-methods (dataclasses, factories)
-    "R0913",  # too-many-arguments
-    "R0914",  # too-many-locals
-    "R0917",  # too-many-positional-arguments
-    "R0902",  # too-many-instance-attributes
-    "R0904",  # too-many-public-methods
-    "R0801",  # duplicate-code
-    "R0401",  # cyclic-import
-    "R1732",  # consider-using-with
-    "W0143",  # comparison-with-callable
-    "W0201",  # attribute-defined-outside-init
-    "W0212",  # protected-access (acceptable in tests and internals)
-    "W0221",  # arguments-differ (acceptable for overrides)
-    "W0603",  # global-statement (acceptable for singletons)
-    "W0613",  # unused-argument (interface compliance)
-    "W0621",  # redefined-outer-name (pytest fixtures)
-    "W0622",  # redefined-builtin (intentional for 'open' function)
-    "W0611",  # unused-import
-    "W0612",  # unused-variable
-    "W0404",  # reimported
-    "W0107",  # unnecessary-pass
-    "W0718",  # broad-exception-caught
-    "W1510",  # subprocess-run-check
-    "E1101",  # no-member (false positives with dynamic types)
-    "E1133",  # not-an-iterable (false positives)
-]
-
-[tool.pylint.format]
-max-line-length = 100
-
-[tool.pylint.design]
-max-args = 10
-max-locals = 25
-max-attributes = 15
-
