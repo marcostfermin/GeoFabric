@@ -13,19 +13,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  render-mermaid:
-    name: Render Mermaid (README -> docs/*.svg)
-    if: ${{ github.event_name != 'release' }}
-    uses: ./.github/workflows/render-mermaid.yml
-    with:
-      commit: ${{ github.event_name == 'push' }}
-    permissions:
-      contents: write
-
   build:
     name: Build Package
     runs-on: ubuntu-latest
-    needs: [render-mermaid]
 
     steps:
       - uses: actions/checkout@v4
