@@ -18,36 +18,47 @@ if (!fs.existsSync(readmePath)) die("README.md not found");
 
 const readme = fs.readFileSync(readmePath, "utf8");
 
-// Newline pattern that matches both LF and CRLF
-const NL = "\\r?\\n";
+// Match mermaid fence with:
+// - optional indentation before ```mermaid
+// - optional whitespace after "mermaid"
+// - LF or CRLF line endings
+const MERMAID_BLOCK_RE = /(^|\r?\n)[ \t]*```mermaid[ \t]*\r?\n([\s\S]*?)\r?\n[ \t]*```/m;
 
-function getArchitectureSection(md) {
-  // (^## Architecture$)(...until next ## heading or EOF)
-  const sectionRe = new RegExp("(^##\\s+Architecture\\s*$)([\\s\\S]*?)(?=^\\s*##\\s+|\\s*$)", "m");
-  const m = md.match(sectionRe);
+// Find "## Architecture" line (tolerant of trailing spaces / CRLF)
+const ARCH_HEADER_RE = /^##\s+Architecture\s*$/m;
+
+function findMermaidAfterArchitecture(md) {
+  const headerMatch = md.match(ARCH_HEADER_RE);
+  if (!headerMatch) return null;
+
+  // Start searching after the header line
+  const startIndex = headerMatch.index + headerMatch[0].length;
+  const tail = md.slice(startIndex);
+
+  const m = tail.match(MERMAID_BLOCK_RE);
   if (!m) return null;
-  return { header: m[1], body: m[2], fullMatch: m[0] };
+
+  return m[2].trimEnd();
 }
 
-function getFirstMermaidBlock(text) {
-  const mermaidRe = new RegExp("```mermaid\\s*" + NL + "([\\s\\S]*?)" + NL + "```", "m");
-  const m = text.match(mermaidRe);
+function findFirstMermaidAnywhere(md) {
+  const m = md.match(MERMAID_BLOCK_RE);
   if (!m) return null;
-  return m[1].trimEnd();
+  return m[2].trimEnd();
 }
 
-const arch = getArchitectureSection(readme);
-
-if (!arch) {
-  console.log('No "## Architecture" section found in README.md. Nothing to do.');
-  process.exit(0);
-}
-
-const mermaidBody = getFirstMermaidBlock(arch.body);
+let mermaidBody = findMermaidAfterArchitecture(readme);
 
 if (!mermaidBody) {
-  console.log('No Mermaid block found under "## Architecture". Nothing to do.');
-  process.exit(0);
+  // fallback: still render something if README has mermaid elsewhere
+  mermaidBody = findFirstMermaidAnywhere(readme);
+  if (!mermaidBody) {
+    console.log('No Mermaid block found in README.md. Nothing to do.');
+    process.exit(0);
+  }
+  console.log('No Mermaid block found after "## Architecture". Using first Mermaid block found in README.');
+} else {
+  console.log('Found Mermaid block after "## Architecture".');
 }
 
 const docsDir = path.join(repoRoot, "docs");
@@ -63,7 +74,10 @@ run("mmdc", ["-i", mmdFile, "-o", svgFile, "-b", "transparent"]);
 
 console.log("Rendered docs/architecture.svg");
 
-// Raw GitHub URL so PyPI can render the image
+// (Optional) README rewrite to PyPI-friendly image
+// If you want the README auto-rewritten, keep this on.
+// If you don't want it to touch README at all, delete everything below this line.
+
 const imgUrl = "https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/architecture.svg";
 
 const replacement =
@@ -83,24 +97,41 @@ const replacement =
     ""
   ].join("\n");
 
-// Replace the first Mermaid block within the Architecture section
-const mermaidBlockRe = new RegExp("```mermaid\\s*" + NL + "[\\s\\S]*?" + NL + "```", "m");
+function rewriteArchitectureSection(md) {
+  const sectionRe = /(^##\s+Architecture\s*$)([\s\S]*?)(?=^\s*##\s+|\s*$)/m;
+  const sm = md.match(sectionRe);
+  if (!sm) return md;
 
-const alreadyRendered =
-  arch.body.includes(imgUrl) &&
-  arch.body.includes("<details>") &&
-  arch.body.includes("Mermaid source");
+  const header = sm[1];
+  const body = sm[2];
+  const full = sm[0];
 
-if (!alreadyRendered) {
-  const newArchBody = arch.body.replace(mermaidBlockRe, replacement);
-  const rewritten = readme.replace(arch.fullMatch, `${arch.header}${newArchBody}`);
+  // idempotent: don't churn commits if already rendered
+  const alreadyRendered =
+    body.includes(imgUrl) &&
+    body.includes("<details>") &&
+    body.includes("Mermaid source");
 
-  if (rewritten !== readme) {
-    fs.writeFileSync(readmePath, rewritten, "utf8");
-    console.log("Updated README.md (Architecture now uses rendered SVG + keeps Mermaid source).");
+  if (alreadyRendered) return md;
+
+  // Replace the first mermaid fence inside the architecture section (if present),
+  // otherwise insert the rendered image + details at the top of the section.
+  const hasMermaidInSection = MERMAID_BLOCK_RE.test(body);
+
+  let newBody;
+  if (hasMermaidInSection) {
+    newBody = body.replace(MERMAID_BLOCK_RE, "\n" + replacement + "\n");
   } else {
-    console.log("README.md not modified (replacement did not apply).");
+    newBody = "\n" + replacement + "\n" + body;
   }
+
+  return md.replace(full, `${header}${newBody}`);
+}
+
+const rewritten = rewriteArchitectureSection(readme);
+if (rewritten !== readme) {
+  fs.writeFileSync(readmePath, rewritten, "utf8");
+  console.log("Updated README.md (Architecture section now uses rendered SVG + keeps Mermaid source).");
 } else {
-  console.log("README.md already contains rendered diagram markup. No rewrite needed.");
+  console.log("README.md not modified.");
 }
