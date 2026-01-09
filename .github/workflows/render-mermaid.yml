@@ -2,7 +2,19 @@ name: Render Mermaid from README
 
 on:
   workflow_call:
+    inputs:
+      commit:
+        description: "Whether to commit rendered outputs back to the repository"
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
+    inputs:
+      commit:
+        description: "Commit rendered outputs back to the repository"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -11,7 +23,7 @@ jobs:
   render:
     runs-on: ubuntu-latest
 
-    # prevent infinite loop if this workflow commits
+    # Prevent infinite loop if this workflow commits
     if: ${{ github.actor != 'github-actions[bot]' }}
 
     steps:
@@ -33,8 +45,8 @@ jobs:
         run: |
           node scripts/render-mermaid-from-readme.mjs
 
-      - name: Commit changes (push only)
-        if: ${{ github.event_name == 'push' }}
+      - name: Commit changes (when enabled)
+        if: ${{ inputs.commit }}
         run: |
           set -e
 
