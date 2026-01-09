@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "README.md"
+      - "scripts/render-mermaid-from-readme.mjs"
   workflow_dispatch:
 
 permissions:
@@ -12,10 +13,16 @@ permissions:
 
 jobs:
   render:
+    # Prevent infinite loop when the workflow commits back to main
+    if: ${{ github.actor != 'github-actions[bot]' }}
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -30,13 +37,18 @@ jobs:
         run: |
           node scripts/render-mermaid-from-readme.mjs
 
-      - name: Commit changes (README + docs/*.svg)
+      - name: Commit changes (README + docs outputs)
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Stage changes safely (don't fail if globs don't match)
+          git add README.md || true
+          git add docs || true
+
           if [ -n "$(git status --porcelain)" ]; then
-            git add README.md docs/*.svg docs/*.mmd
             git commit -m "ci: render mermaid diagrams from README"
             git push
           else
