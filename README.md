@@ -1,11 +1,11 @@
-<h1 style="display: flex; align-items: center; gap: 16px; margin: 0 0 8px 0;">
+<h1 style="display:flex;align-items:center;gap:16px;margin:0 0 8px 0;">
   <span>GeoFabric</span>
   <img
-    src="docs/logo.svg"
+    src="https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/logo.svg"
     alt="GeoFabric Logo"
     width="56"
     height="56"
-    style="margin-top: 4px;"
+    style="margin-top:4px;"
   >
 </h1>
 
