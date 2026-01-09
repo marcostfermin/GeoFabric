@@ -1,6 +1,13 @@
-# GeoFabric
-
-<img src="logo.svg" alt="GeoFabric Logo" width="96" />
+<h1 style="display:flex;align-items:center;gap:16px;margin:0 0 8px 0;">
+  <span>GeoFabric</span>
+  <img
+    src="https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/logo.svg"
+    alt="GeoFabric Logo"
+    width="56"
+    height="56"
+    style="margin-top:4px;"
+  >
+</h1>
 
 GeoFabric is a pragmatic geospatial toolkit for ETL, analytics, and publishing—built around Parquet, DuckDB Spatial, and PMTiles.
 
