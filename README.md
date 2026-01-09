@@ -38,6 +38,86 @@ GeoFabric is a pragmatic geospatial toolkit for ETL, analytics, and publishing�
 
 ## Architecture
 
+
+<!-- Rendered diagram (PyPI-friendly) -->
+<img src="https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/architecture.svg" alt="GeoFabric architecture diagram" width="900" />
+
+<details>
+<summary>Mermaid source</summary>
+
+```mermaid
+flowchart TB
+  %% =========================
+  %% USER ENTRY POINTS
+  %% =========================
+  subgraph U["User entry points"]
+    direction LR
+    U1["Python API"]
+    U2["CLI"]
+    U3["Notebook viz"]
+  end
+
+  %% =========================
+  %% THIN CORE (ORCHESTRATION)
+  %% =========================
+  C["GeoFabric core<br/>lazy query orchestration"]
+
+  %% =========================
+  %% EXECUTION BACKEND
+  %% =========================
+  subgraph E["Execution backend"]
+    direction TB
+    E1["Query planning / SQL generation"]
+    E2["DuckDB + DuckDB Spatial"]
+  end
+
+  %% =========================
+  %% DATA SOURCES
+  %% =========================
+  subgraph S["Data sources"]
+    direction TB
+    S1["Local files"]
+    S2["S3 / GCS / Azure"]
+    S3["PostGIS"]
+    S4["STAC / Overture"]
+  end
+
+  %% =========================
+  %% OUTPUTS
+  %% =========================
+  subgraph O["Outputs"]
+    direction TB
+    O1["Parquet (GeoParquet)"]
+    O2["Vector formats<br/>GeoJSON · GPKG · FlatGeoBuf · CSV"]
+    O3["PMTiles (tippecanoe)"]
+  end
+
+  %% =========================
+  %% SUPPORT SERVICES
+  %% =========================
+  subgraph P["Support services"]
+    direction LR
+    P1["Validation / repair"]
+    P2["Caching"]
+    P3["Configuration"]
+    P4["Plugin registry"]
+  end
+
+  %% =========================
+  %% TRUE EXECUTION FLOW
+  %% =========================
+  U --> C
+  S --> C
+  C --> E1
+  E1 --> E2
+  E2 --> O
+
+  P -.-> C
+```
+
+</details>
+
+
 ```mermaid
 flowchart TB
   %% =========================
