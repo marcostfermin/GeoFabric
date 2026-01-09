@@ -1,12 +1,7 @@
 name: Render Mermaid from README
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "README.md"
-      - "scripts/render-mermaid-from-readme.mjs"
-      - ".github/workflows/render-mermaid.yml"
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -14,9 +9,6 @@ permissions:
 
 jobs:
   render:
-    # Prevent infinite loop when the workflow commits back to main
-    if: ${{ github.actor != 'github-actions[bot]' }}
-
     runs-on: ubuntu-latest
 
     steps:
@@ -38,14 +30,14 @@ jobs:
         run: |
           node scripts/render-mermaid-from-readme.mjs
 
-      - name: Commit changes (README + docs outputs)
+      - name: Commit changes (push only)
+        if: ${{ github.event_name == 'push' && github.actor != 'github-actions[bot]' }}
         run: |
           set -e
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Stage changes safely (don't fail if globs don't match)
           git add README.md || true
           git add docs || true
 
