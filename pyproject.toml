@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "geofabric"
 dynamic = ["version"]
-description = "Query geospatial sources, analyze at scale, and publish results with a consistent API."
+description = "GeoFabric is a pragmatic geospatial toolkit for ETL, analytics, and publishing—built around Parquet, DuckDB Spatial, and PMTiles."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
