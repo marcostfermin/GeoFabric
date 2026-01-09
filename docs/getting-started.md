@@ -3,6 +3,9 @@
 ## Installation
 
 ```bash
+# From pip
+pip install geofabric
+
 # From source
 pip install -e "."
 
