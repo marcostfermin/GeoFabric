@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Geometry type handling for GeoParquet files (GEOMETRY vs WKB_BLOB)
 - S3/Azure spatial operations now work correctly with native GEOMETRY types
 
-## [0.1.0] - 2025-01-08
+## [1.0.0] - 2025-01-09
 
 ### Added
 - Initial release
@@ -63,4 +63,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visualization support with lonboard (optional)
 
 [Unreleased]: https://github.com/marcostfermin/GeoFabric/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/marcostfermin/GeoFabric/releases/tag/v0.1.0
+[1.0.0]: https://github.com/marcostfermin/GeoFabric/releases/tag/v1.0.0
