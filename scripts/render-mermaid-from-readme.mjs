@@ -61,7 +61,7 @@ console.log(`Rendered ${outFiles.length} Mermaid diagram(s) to docs/*.svg.`);
 //
 // This is the most PyPI-friendly pattern.
 const first = outFiles[0];
-const imgRelative = `docs/diagram-${first.idx}.svg`;
+const imgRelative = `https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/diagram-${first.idx}.svg`;
 
 // Build replacement that preserves Mermaid source for GitHub readers
 const replacement =
