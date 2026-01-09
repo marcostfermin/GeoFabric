@@ -7,17 +7,36 @@
 pip install geofabric
 
 # From source
+git clone https://github.com/marcostfermin/GeoFabric.git
+cd GeoFabric
 pip install -e "."
 
-# With all optional dependencies
+# Optional dependencies
+pip install -e ".[viz]"
+pip install -e ".[stac]"
 pip install -e ".[all]"
-
-# With specific extras
-pip install -e ".[viz]"   # Visualization (geopandas + lonboard)
-pip install -e ".[stac]"  # STAC catalog support
+pip install -e ".[dev,all]"
 ```
 
 ## Quick Start
+
+```python
+import geofabric as gf
+
+ds = gf.open("file:///path/to/data.parquet")
+roi = gf.roi.bbox(-74.10, 40.60, -73.70, 40.90)
+
+q = ds.within(roi).select(["*"]).limit(1000)
+
+q.to_parquet("out.parquet")
+q.to_geojson("out.geojson")
+q.to_geopackage("out.gpkg")
+
+print(q.aggregate({"count": "*"}))
+
+q.show()
+q.to_pmtiles("out.pmtiles", layer="features", maxzoom=14)
+```
 
 ### Open a Dataset
 
