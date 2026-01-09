@@ -20,6 +20,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Node for Mermaid rendering
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Mermaid CLI
+        run: |
+          npm install -g @mermaid-js/mermaid-cli
+
+      - name: Render Mermaid diagram(s) for docs (no commit)
+        run: |
+          node scripts/render-mermaid-to-docs.mjs
+          echo "=== docs/ contents after render ==="
+          ls -la docs || true
+
+      # Python for MkDocs build
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
