@@ -1,14 +1,17 @@
-<p align="center">
-  <img src="logo.svg" alt="GeoFabric Logo" width="128" height="128">
-</p>
-
 # GeoFabric
+
+<img src="logo.svg" alt="GeoFabric Logo" width="96" />
 
 GeoFabric is a pragmatic geospatial toolkit for ETL, analytics, and publishing—built around Parquet, DuckDB Spatial, and PMTiles.
 
+## What you can do
+
 - **ETL**: Pull/normalize subsets into (Geo)Parquet
 - **Analytics**: Scalable spatial SQL via DuckDB + DuckDB Spatial
-- **Viz / Publishing**: Quick notebook maps + PMTiles generation via tippecanoe
+- **Viz / Publishing**: Notebook maps + PMTiles generation via tippecanoe
+
+!!! tip "Start here"
+    Go to **Getting Started** to install GeoFabric and run your first query.
 
 ## Key Features
 
