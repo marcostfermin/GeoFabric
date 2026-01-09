@@ -1,0 +1,151 @@
+{
+  "source_file": "/Users/marcosfermin/GeoFabric/tests/data/overture_buildings_sample.geojson",
+  "pmtiles_file": "/Users/marcosfermin/GeoFabric/tests/data/pmtiles_output/buildings.pmtiles",
+  "file_size_bytes": 5537,
+  "header": {
+    "tile_type": "TileType.MVT",
+    "tile_compression": "Compression.GZIP",
+    "min_zoom": 0,
+    "max_zoom": 14,
+    "bounds": {
+      "min_lon": -74.002792,
+      "min_lat": 40.708401,
+      "max_lon": -74.00054,
+      "max_lat": 40.709782
+    }
+  },
+  "metadata": {
+    "name": "/Users/marcosfermin/GeoFabric/tests/data/pmtiles_output/buildings.pmtiles",
+    "format": "pbf",
+    "type": "overlay",
+    "description": "/Users/marcosfermin/GeoFabric/tests/data/pmtiles_output/buildings.pmtiles",
+    "version": "2",
+    "strategies": [
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 20
+      },
+      {
+        "tiny_polygons": 20
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 10
+      },
+      {
+        "tiny_polygons": 8
+      },
+      {
+        "tiny_polygons": 11
+      },
+      {
+        "tiny_polygons": 4
+      },
+      {
+        "tiny_polygons": 3
+      },
+      {},
+      {}
+    ],
+    "generator": "tippecanoe v2.79.0",
+    "generator_options": "tippecanoe -o /Users/marcosfermin/GeoFabric/tests/data/pmtiles_output/buildings.pmtiles -l buildings '--maximum-zoom=14' '--minimum-zoom=0' '--projection=EPSG:4326' /var/folders/tz/fyhnb11d0392psd97kqwgxch0000gn/T/tmp_dupidth/buildings.geojson",
+    "antimeridian_adjusted_bounds": "-74.002792,40.708401,-74.000540,40.709782",
+    "vector_layers": [
+      {
+        "id": "buildings",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 14,
+        "fields": {
+          "class": "String",
+          "height": "Number",
+          "id": "String",
+          "subtype": "String"
+        }
+      }
+    ],
+    "tilestats": {
+      "layerCount": 1,
+      "layers": [
+        {
+          "layer": "buildings",
+          "count": 10,
+          "geometry": "Polygon",
+          "attributeCount": 4,
+          "attributes": [
+            {
+              "attribute": "class",
+              "count": 3,
+              "type": "string",
+              "values": [
+                "apartments",
+                "bridge_structure",
+                "house"
+              ]
+            },
+            {
+              "attribute": "height",
+              "count": 8,
+              "type": "number",
+              "values": [
+                10.9,
+                12,
+                14.6,
+                16.3,
+                16.6,
+                22.9,
+                31.8,
+                70
+              ],
+              "min": 10.9,
+              "max": 70
+            },
+            {
+              "attribute": "id",
+              "count": 10,
+              "type": "string",
+              "values": [
+                "26a1682a-b6d7-49fc-836a-e5f48be9c4d4",
+                "3e1071bc-7473-4054-bcd2-01ec81903405",
+                "44ec3d7f-d94f-453f-bbb2-3a3412333b9a",
+                "46ecad1a-33a8-4886-9c4e-28f0bfa345c5",
+                "5e2355d6-ef23-4191-8f0f-1c68148c7f07",
+                "683cd0c5-9ec3-4ccc-a344-cfd18b84296b",
+                "8125a22b-c5a1-44a9-b575-b3aec32640b0",
+                "8578caa3-c8b0-4812-82d3-373feabbf528",
+                "a7cc6ca5-41cd-40d4-b10c-00c262f08596",
+                "ea7982b0-1651-4bce-9d9f-78a9545ff345"
+              ]
+            },
+            {
+              "attribute": "subtype",
+              "count": 3,
+              "type": "string",
+              "values": [
+                "civic",
+                "residential",
+                "transportation"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
