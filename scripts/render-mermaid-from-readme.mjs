@@ -18,26 +18,19 @@ if (!fs.existsSync(readmePath)) die("README.md not found");
 
 const readme = fs.readFileSync(readmePath, "utf8");
 
-// CRLF-safe newline pattern
-const NL = String.raw`\r?\n`;
+// Newline pattern that matches both LF and CRLF
+const NL = "\\r?\\n";
 
 function getArchitectureSection(md) {
-  // Capture "## Architecture" section until next "## " heading or EOF
-  const sectionRe = new RegExp(
-    String.raw`(^##\s+Architecture\s*$)([\s\S]*?)(?=^\s*##\s+|\s*$)`,
-    "m"
-  );
+  // (^## Architecture$)(...until next ## heading or EOF)
+  const sectionRe = new RegExp("(^##\\s+Architecture\\s*$)([\\s\\S]*?)(?=^\\s*##\\s+|\\s*$)", "m");
   const m = md.match(sectionRe);
   if (!m) return null;
   return { header: m[1], body: m[2], fullMatch: m[0] };
 }
 
 function getFirstMermaidBlock(text) {
-  // CRLF-safe fenced block capture
-  const mermaidRe = new RegExp(
-    String.raw` ```mermaid\s*` + NL + String.raw`([\s\S]*?)` + NL + String.raw` ``` `.trim(),
-    "m"
-  );
+  const mermaidRe = new RegExp("```mermaid\\s*" + NL + "([\\s\\S]*?)" + NL + "```", "m");
   const m = text.match(mermaidRe);
   if (!m) return null;
   return m[1].trimEnd();
@@ -70,7 +63,7 @@ run("mmdc", ["-i", mmdFile, "-o", svgFile, "-b", "transparent"]);
 
 console.log("Rendered docs/architecture.svg");
 
-// Use raw GitHub URL so PyPI can load the image
+// Raw GitHub URL so PyPI can render the image
 const imgUrl = "https://raw.githubusercontent.com/marcostfermin/GeoFabric/main/docs/architecture.svg";
 
 const replacement =
@@ -90,11 +83,8 @@ const replacement =
     ""
   ].join("\n");
 
-// Replace the first Mermaid fenced block inside the Architecture section (CRLF-safe)
-const mermaidBlockRe = new RegExp(
-  String.raw` ```mermaid\s*` + NL + String.raw`[\s\S]*?` + NL + String.raw` ``` `.trim(),
-  "m"
-);
+// Replace the first Mermaid block within the Architecture section
+const mermaidBlockRe = new RegExp("```mermaid\\s*" + NL + "[\\s\\S]*?" + NL + "```", "m");
 
 const alreadyRendered =
   arch.body.includes(imgUrl) &&
