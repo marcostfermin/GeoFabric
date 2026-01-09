@@ -17,6 +17,8 @@ jobs:
     name: Render Mermaid (README -> docs/*.svg)
     if: ${{ github.event_name != 'release' }}
     uses: ./.github/workflows/render-mermaid.yml
+    with:
+      commit: ${{ github.event_name == 'push' }}
     permissions:
       contents: write
 
