@@ -6,6 +6,7 @@ on:
     paths:
       - "README.md"
       - "scripts/render-mermaid-from-readme.mjs"
+      - ".github/workflows/render-mermaid.yml"
   workflow_dispatch:
 
 permissions:
