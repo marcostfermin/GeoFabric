@@ -13,6 +13,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  render-mermaid:
+    name: Render Mermaid (README -> docs/*.svg)
+    uses: ./.github/workflows/render-mermaid.yml
+    permissions:
+      contents: write
+
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
